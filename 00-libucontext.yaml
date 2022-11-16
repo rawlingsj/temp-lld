@@ -1,0 +1,51 @@
+# Generated from https://git.alpinelinux.org/aports/plain/main/libucontext/APKBUILD
+package:
+  name: libucontext
+  version: "1.2"
+  epoch: 0
+  description: ucontext function implementations
+  target-architecture:
+    - all
+  copyright:
+    - paths:
+        - "*"
+      attestation: TODO
+      license: ISC
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+      - /work/packages
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - busybox
+      - ca-certificates-bundle
+      - build-base
+      - automake
+      - autoconf
+      - scdoc
+      - tree
+pipeline:
+  - uses: fetch
+    with:
+      expected-sha256: 5a629107fd15042f6e4850932d4062df71135017b61091b3c71f7bf201d31bcd
+      uri: https://distfiles.dereferenced.org/libucontext/libucontext-${{package.version}}.tar.xz
+  - runs: |
+      make 
+      make docs
+  - runs: |
+      make DESTDIR=${{targets.destdir}} install install_docs
+      tree ${{targets.destdir}}
+subpackages:
+  - name: libucontext-dev
+    pipeline:
+      - uses: split/dev
+    dependencies:
+      runtime:
+        - libucontext
+    description: libucontext dev
+  - name: libucontext-doc
+    pipeline:
+      - uses: split/manpages
+    description: libucontext manpages

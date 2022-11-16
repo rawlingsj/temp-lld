@@ -1,0 +1,66 @@
+# Generated from https://git.alpinelinux.org/aports/plain/main/libunwind/APKBUILD
+package:
+  name: libunwind
+  version: 1.6.2
+  epoch: 0
+  description: Portable and efficient C programming interface (API) to determine the call-chain of a program
+  target-architecture:
+    - all
+  copyright:
+    - paths:
+        - "*"
+      attestation: TODO
+      license: MIT
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+      - /work/packages
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - busybox
+      - ca-certificates-bundle
+      - build-base
+      - automake
+      - autoconf
+      - autoconf
+      - automake
+      - libtool
+      - libucontext-dev
+      - linux-headers
+      - xz-dev
+pipeline:
+  - uses: fetch
+    with:
+      expected-sha256: 4a6aec666991fb45d0889c44aede8ad6eb108071c3554fcdff671f9c94794976
+      uri: https://download.savannah.gnu.org/releases/libunwind/libunwind-${{package.version}}.tar.gz
+  - uses: autoconf/configure
+    with:
+      opts: |
+        --mandir=/usr/share/man \
+        --enable-cxx-exceptions
+  - uses: autoconf/make
+  - uses: autoconf/make-install
+  - uses: strip
+subpackages:
+  # - name: libunwind-dbg
+  #   pipeline:
+  #     - uses: split/FIXME
+  #   description: libunwind FIXME
+  - name: libunwind-static
+    pipeline:
+      - uses: split/static
+    description: libunwind static
+  - name: libunwind-dev
+    pipeline:
+      - uses: split/dev
+    dependencies:
+      runtime:
+        - libunwind
+        - libucontext-dev
+    description: libunwind dev
+  # - name: libunwind-doc
+  #   pipeline:
+  #     - uses: split/manpages
+  #   description: libunwind manpages
