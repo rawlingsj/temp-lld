@@ -28,7 +28,6 @@ environment:
       - libedit-dev
       - llvm15
       - llvm15-dev
-      - libLLVM-15
       - samurai
       - zlib-dev
       - git
